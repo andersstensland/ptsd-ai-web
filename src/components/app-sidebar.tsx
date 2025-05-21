@@ -1,14 +1,13 @@
 "use client"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   BookOpen,
   Bot,
   GalleryVerticalEnd,
-  Settings2,
   SquareTerminal
 } from "lucide-react"
 import * as React from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
