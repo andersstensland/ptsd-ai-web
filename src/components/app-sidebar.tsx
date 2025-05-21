@@ -5,6 +5,7 @@ import {
   BookOpen,
   Bot,
   GalleryVerticalEnd,
+  Link,
   SquareTerminal
 } from "lucide-react"
 import * as React from "react"
@@ -18,6 +19,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import Image from "next/image"
 
 // This is sample data.
 const data = {
@@ -25,13 +27,6 @@ const data = {
     name: "admin",
     email: "m@example.com",
   },
-  teams: [
-    {
-      name: "Høyskolen Kristiania",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-  ],
   navMain: [
     {
       title: "Playground",
@@ -86,17 +81,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <Avatar>
-          <AvatarImage sizes="md" src="logo/symbolet.svg" alt="Symbolet" />
-          <AvatarFallback>HK</AvatarFallback>
-        </Avatar>
+          <Image
+            src="logo/symbolet.svg"
+            alt="Symbolet"
+            className="hidden h-32 w-32 lg:block"
+            width={300}
+            height={300}
+          />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

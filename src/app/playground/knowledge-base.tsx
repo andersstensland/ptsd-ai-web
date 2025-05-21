@@ -29,38 +29,16 @@ export function KnowledgeBase() {
   const [activeTab, setActiveTab] = useState("sources");
   const [searchQuery, setSearchQuery] = useState("");
 
+
+  // Sample data for sources
   const sources: Source[] = [
     {
       id: "1",
-      name: "Company Documentation",
+      name: "PTSD STUFF",
       type: "document",
       status: "active",
       documentCount: 24,
       lastUpdated: "2023-05-15",
-    },
-    {
-      id: "2",
-      name: "Product Knowledge Base",
-      type: "website",
-      status: "active",
-      documentCount: 56,
-      lastUpdated: "2023-05-10",
-    },
-    {
-      id: "3",
-      name: "Customer Support Database",
-      type: "database",
-      status: "active",
-      documentCount: 132,
-      lastUpdated: "2023-05-18",
-    },
-    {
-      id: "4",
-      name: "Technical Specifications",
-      type: "document",
-      status: "processing",
-      documentCount: 8,
-      lastUpdated: "2023-05-20",
     },
   ];
 
@@ -101,7 +79,6 @@ export function KnowledgeBase() {
           <TabsList className="mb-4">
             <TabsTrigger value="sources">Sources</TabsTrigger>
             <TabsTrigger value="upload">Upload</TabsTrigger>
-            <TabsTrigger value="crawl">Web Crawl</TabsTrigger>
           </TabsList>
 
           <TabsContent value="sources">
@@ -181,116 +158,8 @@ export function KnowledgeBase() {
             <DocumentUpload />
           </TabsContent>
 
-          <TabsContent value="crawl">
-            <div className="space-y-4">
-              <div className="grid gap-4">
-                <div>
-                  <Label htmlFor="website-url">Website URL</Label>
-                  <Input id="website-url" placeholder="https://example.com" />
-                </div>
-                <div>
-                  <Label htmlFor="crawl-depth">Crawl Depth</Label>
-                  <Select defaultValue="2">
-                    <SelectTrigger id="crawl-depth">
-                      <SelectValue placeholder="Select crawl depth" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">1 - Homepage only</SelectItem>
-                      <SelectItem value="2">
-                        2 - Homepage + direct links
-                      </SelectItem>
-                      <SelectItem value="3">3 - Deep crawl</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="sitemap" />
-                  <label
-                    htmlFor="sitemap"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Use sitemap.xml if available
-                  </label>
-                </div>
-              </div>
-              <Button className="w-full">Start Crawling</Button>
-            </div>
-          </TabsContent>
         </Tabs>
       </CardContent>
     </Card>
   );
-}
-
-function Label({
-  htmlFor,
-  children,
-}: {
-  htmlFor: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label htmlFor={htmlFor} className="text-sm font-medium mb-2 block">
-      {children}
-    </label>
-  );
-}
-
-function Checkbox({ id }: { id: string }) {
-  return (
-    <div className="h-4 w-4 rounded border border-primary flex items-center justify-center">
-      <input
-        type="checkbox"
-        id={id}
-        className="opacity-0 absolute h-4 w-4 cursor-pointer"
-      />
-    </div>
-  );
-}
-
-function Select({
-  children,
-  defaultValue,
-}: {
-  children: React.ReactNode;
-  defaultValue?: string;
-}) {
-  return (
-    <div className="relative">
-      <select
-        defaultValue={defaultValue}
-        className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-      >
-        {children}
-      </select>
-    </div>
-  );
-}
-
-function SelectTrigger({
-  children,
-  id,
-}: {
-  children: React.ReactNode;
-  id?: string;
-}) {
-  return <div id={id}>{children}</div>;
-}
-
-function SelectValue({ placeholder }: { placeholder?: string }) {
-  return <span>{placeholder}</span>;
-}
-
-function SelectContent({ children }: { children: React.ReactNode }) {
-  return <div>{children}</div>;
-}
-
-function SelectItem({
-  children,
-  value,
-}: {
-  children: React.ReactNode;
-  value: string;
-}) {
-  return <option value={value}>{children}</option>;
 }

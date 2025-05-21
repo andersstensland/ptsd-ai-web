@@ -89,9 +89,7 @@ export default function PlaygroundPage() {
               </Select>
             </div>
             <Button variant="outline">Save</Button>
-            <Button variant="outline">View code</Button>
-            <Button variant="outline">Share</Button>
-            <Link href="/settings">
+            <Link href="/playground/settings">
               <Button variant="outline" size="icon" title="Settings">
                 <Settings className="h-4 w-4" />
               </Button>
