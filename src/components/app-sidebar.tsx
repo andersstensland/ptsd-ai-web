@@ -1,57 +1,37 @@
 "use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   BookOpen,
   Bot,
-  GalleryVerticalEnd,
-  Link,
   SquareTerminal
 } from "lucide-react"
 import * as React from "react"
 
 import { NavMain } from "@/components/nav-main"
-import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
-  SidebarRail,
+  SidebarRail
 } from "@/components/ui/sidebar"
 import Image from "next/image"
 
 // This is sample data.
 const data = {
-  user: {
-    name: "admin",
-    email: "m@example.com",
-  },
   navMain: [
     {
-      title: "Playground",
-      url: "playground",
+      title: "Workspace",
+      url: "",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
+          title: "Workspace",
+          url: "workspace",
+        },
+        {
           title: "Settings",
-          url: "playground/settings",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "models",
-      icon: Bot,
-      items: [
-        {
-          title: "Embeddings",
-          url: "models/embeddings",
-        },
-        {
-          title: "Multimodal",
-          url: "#",
+          url: "workspace/settings",
         },
       ],
     },
@@ -60,6 +40,10 @@ const data = {
       url: "documentation",
       icon: BookOpen,
       items: [
+        {
+          title: "Documentation",
+          url: "documentation",
+        },
         {
           title: "Introduction",
           url: "documentation/introduction#",

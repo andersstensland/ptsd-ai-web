@@ -47,43 +47,18 @@ export default function GetStartedPage() {
       <div className="prose max-w-none">
         <p className="lead">
           This guide will walk you through the basic steps to start using the AI
-          Playground effectively. Follow these instructions to set up your
+          Workspace effectively. Follow these instructions to set up your
           environment and begin generating text.
         </p>
 
         <h2 className="text-xl font-semibold mt-8 mb-4">
-          1. Setting Up Your API Key
+          1. Basic Text Generation
         </h2>
-        <p>
-          Before you can use the AI Playground, you need to configure your API
-          key:
-        </p>
+        <p>To generate your first text with the AI Workspace:</p>
         <ol className="list-decimal pl-6 space-y-2">
+          <li>Go to the Workspace page.</li>
           <li>
-            Navigate to the Settings page by clicking the gear icon in the
-            Playground.
-          </li>
-          <li>Expand the "Advanced Settings" section.</li>
-          <li>Enter your API key in the "API Key" field.</li>
-          <li>Click "Save Settings" to store your API key securely.</li>
-        </ol>
-        <div className="bg-muted p-4 rounded-md mt-2">
-          <p className="text-sm">
-            <strong>Note:</strong> If you don't have an API key yet, you can
-            obtain one from the AI provider's website. Visit their documentation
-            for more information on how to get an API key.
-          </p>
-        </div>
-
-        <h2 className="text-xl font-semibold mt-8 mb-4">
-          2. Basic Text Generation
-        </h2>
-        <p>To generate your first text with the AI Playground:</p>
-        <ol className="list-decimal pl-6 space-y-2">
-          <li>Go to the Playground page.</li>
-          <li>
-            Enter a prompt in the text area (e.g., "Write a short story about a
-            robot learning to paint").
+            Enter a prompt in the text area (e.g., "Get some PTSD data idk?").
           </li>
           <li>Click the "Submit" button to generate a response.</li>
           <li>
@@ -92,11 +67,11 @@ export default function GetStartedPage() {
         </ol>
 
         <h2 className="text-xl font-semibold mt-8 mb-4">
-          3. Adjusting Parameters
+          2. Adjusting Parameters
         </h2>
         <p>
           You can customize the behavior of the AI model by adjusting various
-          parameters in the sidebar of the Playground:
+          parameters in the sidebar of the Workspace:
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>
@@ -119,27 +94,24 @@ export default function GetStartedPage() {
         </ul>
 
         <h2 className="text-xl font-semibold mt-8 mb-4">
-          4. Setting Up RAG (Retrieval-Augmented Generation)
+          3. Setting Up RAG (Retrieval-Augmented Generation)
         </h2>
         <p>To enhance responses with your own knowledge base:</p>
         <ol className="list-decimal pl-6 space-y-2">
-          <li>Click on the "Knowledge Base" tab in the Playground.</li>
+          <li>Click on the "Knowledge Base" tab in the Workspace.</li>
           <li>
-            Select "Upload" to add documents or "Web Crawl" to index website
-            content for your knowledge base.
+            Select "Upload" to add documents for your knowledge base.
           </li>
           <li>
-            Once your documents are processed, return to the Playground tab.
+            Once your documents are processed, return to the Workspace tab.
           </li>
-          <li>Enable the "RAG" toggle switch next to the Submit button.</li>
           <li>
-            Enter a prompt related to your knowledge base content to receive
-            responses enhanced with your data.
+            Enter a prompt related to your knowledge base content. RAG is now always enabled and will automatically enhance responses with your data.
           </li>
         </ol>
 
         <h2 className="text-xl font-semibold mt-8 mb-4">
-          5. Customizing Default Settings
+          4. Customizing Default Settings
         </h2>
         <p>To customize your default settings:</p>
         <ol className="list-decimal pl-6 space-y-2">
@@ -174,11 +146,11 @@ export default function GetStartedPage() {
           <div>
             <h4 className="font-medium">Ready to try it out?</h4>
             <p className="text-sm text-muted-foreground">
-              Start generating with the AI Playground now
+              Start generating with the AI Workspace now
             </p>
           </div>
-          <Link href="/playground">
-            <Button>Go to Playground</Button>
+          <Link href="/workspace">
+            <Button>Go to workspace</Button>
           </Link>
         </div>
       </div>
@@ -190,7 +162,7 @@ export default function GetStartedPage() {
             Previous: Introduction
           </Button>
         </Link>
-        <Link href="/docs/changelog">
+        <Link href="/documentation/changelog">
           <Button className="flex items-center gap-2">
             Next: Changelog
             <ArrowRight className="h-4 w-4" />

@@ -1,0 +1,5 @@
+Test document for upload functionality.
+
+This is a simple text file to test the document upload and processing system.
+
+The document should be processed correctly if everything is working properly.

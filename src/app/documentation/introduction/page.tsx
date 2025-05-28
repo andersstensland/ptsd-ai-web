@@ -57,17 +57,6 @@ export default function IntroductionPage() {
           understand the capabilities and features of our AI text generation
           platform.
         </p>
-
-        <h2 className="text-xl font-semibold mt-8 mb-4">
-          What is AI Playground?
-        </h2>
-        <p>
-          AI Playground is a powerful interface for interacting with
-          state-of-the-art language models. It allows you to generate text,
-          explore different parameters, and leverage Retrieval-Augmented
-          Generation (RAG) to enhance responses with your own knowledge base.
-        </p>
-
         <h2 className="text-xl font-semibold mt-8 mb-4">Key Features</h2>
         <ul className="list-disc pl-6 space-y-2">
           <li>
@@ -80,7 +69,7 @@ export default function IntroductionPage() {
           </li>
           <li>
             <strong>Multiple Models:</strong> Access various AI models including
-            GPT-3.5, GPT-4, and more.
+            Ollama, and more.
           </li>
           <li>
             <strong>Retrieval-Augmented Generation (RAG):</strong> Enhance
@@ -94,17 +83,6 @@ export default function IntroductionPage() {
             <strong>Customizable Settings:</strong> Configure default behaviors
             and advanced options to suit your workflow.
           </li>
-        </ul>
-
-        <h2 className="text-xl font-semibold mt-8 mb-4">Use Cases</h2>
-        <p>AI Playground can be used for a variety of purposes, including:</p>
-        <ul className="list-disc pl-6 space-y-2">
-          <li>Content creation and copywriting</li>
-          <li>Question answering and research assistance</li>
-          <li>Code generation and explanation</li>
-          <li>Creative writing and brainstorming</li>
-          <li>Document summarization and analysis</li>
-          <li>Building custom AI applications with the API</li>
         </ul>
 
         <h2 className="text-xl font-semibold mt-8 mb-4">About RAG</h2>
@@ -137,7 +115,7 @@ export default function IntroductionPage() {
 
       <div className="flex justify-between mt-12 pt-6 border-t">
         <div></div>
-        <Link href="/docs/get-started">
+        <Link href="/documentation/get-started">
           <Button className="flex items-center gap-2">
             Next: Get Started
             <ArrowRight className="h-4 w-4" />
