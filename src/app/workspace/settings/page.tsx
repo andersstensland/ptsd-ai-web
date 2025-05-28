@@ -1,22 +1,11 @@
 "use client";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
-import { Slider } from "@/components/ui/slider";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -25,11 +14,21 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronRight, Home, Save } from "lucide-react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { Save, ArrowLeft, Home, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
+import * as z from "zod";
 
 const formSchema = z.object({
   // General settings

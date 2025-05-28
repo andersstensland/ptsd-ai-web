@@ -57,13 +57,6 @@ export default function GetStartedPage() {
         <p>To generate your first text with the AI Workspace:</p>
         <ol className="list-decimal pl-6 space-y-2">
           <li>Go to the Workspace page.</li>
-          <li>
-            Enter a prompt in the text area (e.g., "Get some PTSD data idk?").
-          </li>
-          <li>Click the "Submit" button to generate a response.</li>
-          <li>
-            The generated text will appear in the output area above the prompt.
-          </li>
         </ol>
 
         <h2 className="text-xl font-semibold mt-8 mb-4">
@@ -98,15 +91,15 @@ export default function GetStartedPage() {
         </h2>
         <p>To enhance responses with your own knowledge base:</p>
         <ol className="list-decimal pl-6 space-y-2">
-          <li>Click on the "Knowledge Base" tab in the Workspace.</li>
-          <li>
-            Select "Upload" to add documents for your knowledge base.
-          </li>
+          <li>Click on the (Knowledge Base) tab in the Workspace.</li>
+          <li>Select (Upload) to add documents for your knowledge base.</li>
           <li>
             Once your documents are processed, return to the Workspace tab.
           </li>
           <li>
-            Enter a prompt related to your knowledge base content. RAG is now always enabled and will automatically enhance responses with your data.
+            Enter a prompt related to your knowledge base content. RAG is now
+            always enabled and will automatically enhance responses with your
+            data.
           </li>
         </ol>
 
@@ -120,13 +113,13 @@ export default function GetStartedPage() {
             Adjust the settings in the General Settings, Model Defaults, and
             Advanced Settings sections according to your preferences.
           </li>
-          <li>Click "Save Settings" to apply your changes.</li>
+          <li>Click (Save Settings) to apply your changes.</li>
         </ol>
 
         <h2 className="text-xl font-semibold mt-8 mb-4">6. Next Steps</h2>
         <p>
-          Once you're comfortable with the basics, you can explore more advanced
-          features:
+          Once (you&aposre) comfortable with the basics, you can explore more
+          advanced features:
         </p>
         <ul className="list-disc pl-6 space-y-2">
           <li>

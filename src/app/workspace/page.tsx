@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useChat } from "ai/react";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -12,29 +14,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { DEEPINFRA_MODELS, OLLAMA_MODELS, type AIModel, type Provider } from "@/lib/ai-config";
+import { useChat } from "ai/react";
 import {
+  AlignJustify,
+  AlignLeft,
+  AlignRight,
+  BookOpen,
+  Check,
+  Copy,
+  Database,
   MoreHorizontal,
   RotateCcw,
-  AlignLeft,
-  AlignJustify,
-  AlignRight,
-  Copy,
-  Check,
   Settings,
-  Database,
-  BookOpen,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { KnowledgeBase } from "./knowledge-base";
-import { RagContextSummary } from "@/components/rag-context-summary";
-import { DEEPINFRA_MODELS, OLLAMA_MODELS, type Provider, type AIModel } from "@/lib/ai-config";
 
 export default function PlaygroundPage() {
   const [temperature, setTemperature] = useState(0.7);

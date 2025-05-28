@@ -1,13 +1,11 @@
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
-  Home,
-  ChevronRight,
-  Book,
-  FileText,
   ArrowRight,
-  History,
+  ChevronRight,
+  FileText,
+  Home
 } from "lucide-react";
+import Link from "next/link";
 
 export default function IntroductionPage() {
   return (
@@ -104,7 +102,7 @@ export default function IntroductionPage() {
           <ul className="list-disc pl-6 space-y-2">
             <li>Reduces hallucinations and factual errors in AI responses</li>
             <li>
-              Provides up-to-date information beyond the AI's training data
+              Provides up-to-date information beyond the AIs training data
             </li>
             <li>Allows for domain-specific knowledge integration</li>
             <li>Improves response relevance and accuracy</li>
