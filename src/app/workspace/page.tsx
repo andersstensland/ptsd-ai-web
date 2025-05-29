@@ -118,33 +118,7 @@ export default function PlaygroundPage() {
               <div className="flex flex-col gap-4">
                 {/* Controls */}
                 <div className="space-y-4 border-t pt-4">
-                  <div>
-                    <h3 className="mb-2 font-medium">Mode</h3>
-                    <div className="flex border rounded-md">
-                      <Button
-                        variant={mode === "default" ? "default" : "ghost"}
-                        className="flex-1 rounded-none border-0"
-                        onClick={() => setMode("default")}
-                      >
-                        <AlignLeft className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant={mode === "focused" ? "default" : "ghost"}
-                        className="flex-1 rounded-none border-0"
-                        onClick={() => setMode("focused")}
-                      >
-                        <AlignJustify className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant={mode === "chat" ? "default" : "ghost"}
-                        className="flex-1 rounded-none border-0"
-                        onClick={() => setMode("chat")}
-                      >
-                        <AlignRight className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-
+    
                   <div>
                     <h3 className="mb-2 font-medium">Provider</h3>
                     <Select value={provider} onValueChange={(value) => handleProviderChange(value as Provider)}>

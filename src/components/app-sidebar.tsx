@@ -8,6 +8,8 @@ import {
 import * as React from "react"
 
 import { NavMain } from "@/components/nav-main"
+import { NotificationIcon } from "@/components/notification-icon"
+import { UploadStatusIndicator } from "@/components/upload-status-indicator"
 import {
   Sidebar,
   SidebarContent,
@@ -65,6 +67,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
+        <div className="flex items-center justify-between w-full">
           <Image
             src="logo/symbolet.svg"
             alt="Symbolet"
@@ -72,6 +75,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             width={300}
             height={300}
           />
+        </div>
+        {/* Mobile notification icon - visible when sidebar is collapsed */}
+        <div className="flex justify-center pt-2">
+          <NotificationIcon />
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

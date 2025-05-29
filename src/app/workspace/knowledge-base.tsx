@@ -11,8 +11,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Search, Trash2, FileText, RefreshCw } from "lucide-react";
 import { DocumentUpload } from "./document-upload";
+import { useUpload } from "@/lib/upload-context";
 import { toast } from "sonner";
 
 interface DocumentSummary {
@@ -28,6 +30,7 @@ export function KnowledgeBase() {
   const [searchQuery, setSearchQuery] = useState("");
   const [documents, setDocuments] = useState<DocumentSummary[]>([]);
   const [loading, setLoading] = useState(false);
+  const { hasActiveUploads } = useUpload();
 
   const loadDocuments = async () => {
     setLoading(true);
@@ -99,7 +102,12 @@ export function KnowledgeBase() {
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="mb-4">
             <TabsTrigger value="sources">Documents ({documents.length})</TabsTrigger>
-            <TabsTrigger value="upload">Upload</TabsTrigger>
+            <TabsTrigger value="upload" className="relative">
+              Upload
+              {hasActiveUploads && (
+                <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+              )}
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="sources">
@@ -118,7 +126,28 @@ export function KnowledgeBase() {
               </div>
 
               <div className="space-y-3">
-                {filteredDocuments.length === 0 ? (
+                {loading ? (
+                  // Show skeleton loaders while loading
+                  Array.from({ length: 3 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between border rounded-md p-3"
+                    >
+                      <div className="flex items-center gap-3 flex-1">
+                        <Skeleton className="h-5 w-5 rounded" />
+                        <div className="flex-1">
+                          <Skeleton className="h-4 w-3/4 mb-2" />
+                          <Skeleton className="h-3 w-1/2" />
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="w-2 h-2 rounded-full" />
+                        <Skeleton className="h-3 w-16" />
+                        <Skeleton className="h-8 w-8 rounded" />
+                      </div>
+                    </div>
+                  ))
+                ) : filteredDocuments.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
                     <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>No documents uploaded yet.</p>

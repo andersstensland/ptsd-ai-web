@@ -50,7 +50,7 @@ export default function DocumentationPage() {
       </div>
 
       <p className="text-muted-foreground mb-8 max-w-3xl">
-        Welcome to the AI Playground documentation. Here you'll find
+        Welcome to the AI Playground documentation. Here you&aposll find
         comprehensive guides and documentation to help you start working with
         our AI text generation platform as quickly as possible.
       </p>

@@ -2,7 +2,7 @@
 
 async function testRAGChat() {
   try {
-    const response = await fetch('http://localhost:3001/api/chat', {
+    const response = await fetch('http://localhost:3000/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ async function testRAGChat() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    console.log('✅ RAG Chat API Response:');
+    console.log('RAG Chat API Response:');
     console.log('Status:', response.status);
     console.log('Headers:', Object.fromEntries(response.headers.entries()));
     
@@ -49,7 +49,7 @@ async function testRAGChat() {
         fullResponse += chunk;
         process.stdout.write(chunk);
       }
-      console.log('\n\n✅ Full response received successfully!');
+      console.log('\n\nFull response received successfully!');
       console.log('Total length:', fullResponse.length, 'characters');
     }
     

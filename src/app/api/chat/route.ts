@@ -57,7 +57,6 @@ export async function POST(req: Request) {
             const contextMessage = {
               role: 'system' as const,
               content: `You are an AI assistant specialized in PTSD and mental health support. Use the following context from the knowledge base to provide more informed and accurate responses. If the context is relevant to the user's question, incorporate it into your answer. If the context is not relevant, you may ignore it and provide a general response.
-
 CONTEXT FROM KNOWLEDGE BASE:
 ${context}
 

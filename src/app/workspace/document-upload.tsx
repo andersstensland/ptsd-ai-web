@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,81 +12,72 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Upload, FileText, CheckCircle, XCircle, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { Upload, FileText, CheckCircle, XCircle, Loader2, Trash2 } from "lucide-react";
+import { useUpload } from "@/lib/upload-context";
 
 interface DocumentUploadProps {
   onUploadComplete?: () => void;
 }
 
-interface UploadStatus {
-  file: File;
-  status: 'uploading' | 'complete' | 'error';
-  progress: number;
-  error?: string;
-}
-
 export function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
-  const [uploads, setUploads] = useState<UploadStatus[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
+  const { uploads, addUpload, updateUpload, removeUpload, clearCompletedUploads, hasActiveUploads } = useUpload();
 
   const uploadFiles = useCallback(async (files: File[]) => {
-    setIsUploading(true);
+    const uploadIds: string[] = [];
     
-    // Initialize upload status for each file
-    const initialUploads: UploadStatus[] = files.map(file => ({
-      file,
-      status: 'uploading',
-      progress: 0,
-    }));
-    
-    setUploads(initialUploads);
+    // Add all files to the upload queue
+    for (const file of files) {
+      const uploadId = addUpload(file);
+      uploadIds.push(uploadId);
+    }
 
+    // Upload files sequentially
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
+      const uploadId = uploadIds[i];
       
       try {
         const formData = new FormData();
         formData.append('file', file);
+
+        // Simulate progress updates
+        const progressInterval = setInterval(() => {
+          updateUpload(uploadId, { 
+            progress: Math.min(90, Math.random() * 80 + 10) 
+          });
+        }, 500);
 
         const response = await fetch('/api/documents/upload', {
           method: 'POST',
           body: formData,
         });
 
+        clearInterval(progressInterval);
         const result = await response.json();
 
         if (response.ok) {
-          setUploads(prev => prev.map((upload, index) =>
-            index === i
-              ? { ...upload, status: 'complete' as const, progress: 100 }
-              : upload
-          ));
-          toast.success(`${file.name} uploaded successfully`);
+          updateUpload(uploadId, { 
+            status: 'complete', 
+            progress: 100 
+          });
         } else {
-          setUploads(prev => prev.map((upload, index) =>
-            index === i
-              ? { ...upload, status: 'error' as const, error: result.error || 'Upload failed' }
-              : upload
-          ));
-          toast.error(`Failed to upload ${file.name}: ${result.error}`);
+          updateUpload(uploadId, { 
+            status: 'error', 
+            error: result.error || 'Upload failed' 
+          });
         }
       } catch (error) {
         console.error('Upload error:', error);
-        setUploads(prev => prev.map((upload, index) =>
-          index === i
-            ? { ...upload, status: 'error' as const, error: 'Network error' }
-            : upload
-        ));
-        toast.error(`Failed to upload ${file.name}: Network error`);
+        updateUpload(uploadId, { 
+          status: 'error', 
+          error: 'Network error' 
+        });
       }
     }
 
-    setIsUploading(false);
-    
     // Call onUploadComplete callback
     onUploadComplete?.();
-  }, [onUploadComplete]);
+  }, [addUpload, updateUpload, onUploadComplete]);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     uploadFiles(acceptedFiles);
@@ -102,11 +93,7 @@ export function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
     maxSize: 10 * 1024 * 1024, // 10MB
   });
 
-  const clearUploads = () => {
-    setUploads([]);
-  };
-
-  const getStatusIcon = (status: UploadStatus['status']) => {
+  const getStatusIcon = (status: string) => {
     switch (status) {
       case 'uploading':
         return <Loader2 className="h-4 w-4 animate-spin text-blue-500" />;
@@ -114,6 +101,8 @@ export function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
         return <CheckCircle className="h-4 w-4 text-green-500" />;
       case 'error':
         return <XCircle className="h-4 w-4 text-red-500" />;
+      default:
+        return null;
     }
   };
 
@@ -141,16 +130,16 @@ export function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
               isDragActive
                 ? 'border-primary bg-primary/5'
                 : 'border-muted-foreground/25 hover:border-primary/50'
-            }`}
+            } ${hasActiveUploads ? 'opacity-50 pointer-events-none' : ''}`}
           >
             <input {...getInputProps()} />
             <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
             <div className="space-y-2">
               <p className="text-lg font-medium">
-                {isDragActive ? 'Drop files here' : 'Upload documents'}
+                {isDragActive ? 'Drop files here' : hasActiveUploads ? 'Upload in progress...' : 'Upload documents'}
               </p>
               <p className="text-sm text-muted-foreground">
-                Drag and drop files here, or click to select
+                {hasActiveUploads ? 'Please wait for current uploads to complete' : 'Drag and drop files here, or click to select'}
               </p>
               <p className="text-xs text-muted-foreground">
                 Supports PDF, DOCX, and TXT files (max 10MB each)
@@ -161,17 +150,19 @@ export function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
           {uploads.length > 0 && (
             <div className="mt-6 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium">Upload Progress</h3>
-                {!isUploading && (
-                  <Button variant="outline" size="sm" onClick={clearUploads}>
-                    Clear
-                  </Button>
-                )}
+                <h3 className="text-lg font-medium">Upload Status</h3>
+                <div className="flex gap-2">
+                  {!hasActiveUploads && (
+                    <Button variant="outline" size="sm" onClick={clearCompletedUploads}>
+                      Clear Completed
+                    </Button>
+                  )}
+                </div>
               </div>
 
               <div className="space-y-3">
-                {uploads.map((upload, index) => (
-                  <div key={index} className="border rounded-lg p-4">
+                {uploads.map((upload) => (
+                  <div key={upload.id} className="border rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-3">
                         <FileText className="h-5 w-5 text-muted-foreground" />
@@ -182,7 +173,19 @@ export function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
                           </p>
                         </div>
                       </div>
-                      {getStatusIcon(upload.status)}
+                      <div className="flex items-center gap-2">
+                        {getStatusIcon(upload.status)}
+                        {(upload.status === 'complete' || upload.status === 'error') && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() => removeUpload(upload.id)}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
 
                     {upload.status === 'uploading' && (
@@ -190,14 +193,14 @@ export function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
                     )}
 
                     {upload.status === 'error' && upload.error && (
-                      <Alert className="mt-2">
+                      <Alert className="mt-2 border-red-200">
                         <XCircle className="h-4 w-4" />
                         <AlertDescription>{upload.error}</AlertDescription>
                       </Alert>
                     )}
 
                     {upload.status === 'complete' && (
-                      <Alert className="mt-2">
+                      <Alert className="mt-2 border-green-200">
                         <CheckCircle className="h-4 w-4" />
                         <AlertDescription>
                           File uploaded and processed successfully
