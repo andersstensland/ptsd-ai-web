@@ -9,7 +9,6 @@ import * as React from "react"
 
 import { NavMain } from "@/components/nav-main"
 import { NotificationIcon } from "@/components/notification-icon"
-import { UploadStatusIndicator } from "@/components/upload-status-indicator"
 import {
   Sidebar,
   SidebarContent,
@@ -21,6 +20,18 @@ import Image from "next/image"
 // This is sample data.
 const data = {
   navMain: [
+    {
+      title: "Chat",
+      url: "chat",
+      icon: Bot,
+      isActive: false,
+      items: [
+        {
+          title: "New Chat",
+          url: "chat",
+        },
+      ],
+    },
     {
       title: "Workspace",
       url: "",
