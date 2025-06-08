@@ -1,30 +1,52 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-
 import { useChat } from "ai/react";
-
-import { ArrowUpIcon } from "lucide-react";
+import { ArrowUpIcon, Settings, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { AutoResizeTextarea } from "@/components/autoresize-textarea";
+import { MessageContent } from "@/components/message-content";
+import { DEEPINFRA_MODELS, OLLAMA_MODELS, type AIModel, type Provider } from "@/lib/ai-config";
+import { useState, useEffect, useRef } from "react";
 
 export function ChatForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-  const { messages, input, setInput, append } = useChat({
+  const [provider, setProvider] = useState<Provider>("deepinfra");
+  const [selectedModel, setSelectedModel] = useState<AIModel>("meta-llama/Meta-Llama-3.1-8B-Instruct");
+  const [temperature] = useState(0.7);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const { messages, input, setInput, append, isLoading } = useChat({
     api: "/api/chat",
+    body: {
+      provider,
+      model: selectedModel,
+      temperature,
+      maxTokens: 1000,
+      topP: 0.9,
+      useRag: true,
+    },
   });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    void append({ content: input, role: "user" });
-    setInput("");
+    if (input.trim()) {
+      void append({ content: input, role: "user" });
+      setInput("");
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -34,66 +56,217 @@ export function ChatForm({
     }
   };
 
+  const handleProviderChange = (newProvider: Provider) => {
+    setProvider(newProvider);
+    if (newProvider === "ollama") {
+      setSelectedModel(OLLAMA_MODELS[0]);
+    } else {
+      setSelectedModel(DEEPINFRA_MODELS[0]);
+    }
+  };
+
+  // Simple auto-scroll to bottom for new messages
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   const header = (
-    <header className="m-auto flex max-w-96 flex-col gap-5 text-center">
-      <h1 className="text-2xl font-semibold leading-none tracking-tight">
-        PTSD AI Chatbot
-      </h1>
-      <p className="text-muted-foreground text-sm">
-        This is an AI chatbot app made by <span className="text-foreground">Høyskolen Kristiania</span>.
-      </p>
-    </header>
+    <div className="flex flex-col items-center justify-center h-full max-w-2xl mx-auto px-6">
+      <div className="text-center space-y-6">
+        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4">
+          <Sparkles className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-gray-100 dark:to-gray-300">
+          PTSD AI Assistant
+        </h1>
+        <p className="text-xl text-muted-foreground max-w-md mx-auto">
+          Your specialized AI companion for PTSD research and mental health
+          support. Ask me anything about trauma-informed care, treatments, or
+          research.
+        </p>
+        <div className="flex flex-wrap gap-2 justify-center">
+          <div className="px-3 py-1 bg-gray-700 dark:bg-blue-900/30 text-white rounded-full text-sm">
+            Evidence-based
+          </div>
+          <div className="px-3 py-1 bg-gray-700 dark:bg-green-900/30 text-white rounded-full text-sm">
+            RAG-enhanced
+          </div>
+          <div className="px-3 py-1 bg-gray-700 dark:bg-purple-900/30 text-white rounded-full text-sm">
+            Research-focused
+          </div>
+        </div>
+      </div>
+    </div>
   );
 
   const messageList = (
-    <div className="my-4 flex h-fit min-h-full flex-col gap-4">
-      {messages.map((message, index) => (
-        <div
-          key={index}
-          data-role={message.role}
-          className="max-w-[80%] rounded-xl px-3 py-2 text-sm data-[role=assistant]:self-start data-[role=user]:self-end data-[role=assistant]:bg-gray-100 data-[role=user]:bg-blue-500 data-[role=assistant]:text-black data-[role=user]:text-white"
-        >
-          {message.content}
+    <div className="flex-1 overflow-y-auto px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto py-8">
+        <div className="space-y-6">
+          {messages.map((message, index) => (
+            <div
+              key={index}
+              className={cn(
+                "flex gap-4",
+                message.role === "user" ? "justify-end" : "justify-start"
+              )}
+            >
+              {message.role === "assistant" && (
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 mt-1">
+                  <Sparkles className="w-4 h-4 text-white" />
+                </div>
+              )}
+              <div
+                className={cn(
+                  "max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-relaxed",
+                  message.role === "user"
+                    ? "bg-blue-600 text-white ml-12"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                )}
+              >
+                <MessageContent content={message.content} role={message.role} />
+              </div>
+              {message.role === "user" && (
+                <div className="w-8 h-8 rounded-full bg-gray-600 dark:bg-gray-400 flex items-center justify-center flex-shrink-0 mt-1">
+                  <span className="text-white dark:text-gray-900 text-xs font-medium">U</span>
+                </div>
+              )}
+            </div>
+          ))}
+          {isLoading && (
+            <div className="flex gap-4 justify-start">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 mt-1">
+                <Sparkles className="w-4 h-4 text-white" />
+              </div>
+              <div className="max-w-[80%] rounded-2xl px-4 py-3 bg-gray-100 dark:bg-gray-800">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      ))}
+        <div ref={messagesEndRef} />
+      </div>
     </div>
   );
 
   return (
     <main
       className={cn(
-        "ring-none mx-auto flex h-svh max-h-svh w-full max-w-[50rem] flex-col items-stretch border-none",
+        "flex flex-col h-full bg-background",
         className
       )}
       {...props}
     >
-      <div className="flex-1 content-center overflow-y-auto px-6">
+      {/* Header with model selection */}
+      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10 flex-shrink-0">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-semibold">PTSD AI Assistant</h2>
+            <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
+              <span>•</span>
+              <span>Model: {selectedModel}</span>
+            </div>
+          </div>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2">
+                <Settings className="w-4 h-4" />
+                <span className="hidden sm:inline">Settings</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <div className="px-2 py-1.5">
+                <div className="text-sm font-medium">Provider</div>
+                <div className="mt-1 space-y-1">
+                  <Button
+                    variant={provider === "deepinfra" ? "default" : "ghost"}
+                    size="sm"
+                    className="w-full justify-start"
+                    onClick={() => handleProviderChange("deepinfra")}
+                  >
+                    DeepInfra
+                  </Button>
+                  <Button
+                    variant={provider === "ollama" ? "default" : "ghost"}
+                    size="sm"
+                    className="w-full justify-start"
+                    onClick={() => handleProviderChange("ollama")}
+                  >
+                    Ollama
+                  </Button>
+                </div>
+              </div>
+              
+              <DropdownMenuSeparator />
+              
+              <div className="px-2 py-1.5">
+                <div className="text-sm font-medium mb-1">Model</div>
+                <div className="space-y-1">
+                  {(provider === "ollama" ? OLLAMA_MODELS : DEEPINFRA_MODELS).map((model) => (
+                    <Button
+                      key={model}
+                      variant={selectedModel === model ? "default" : "ghost"}
+                      size="sm"
+                      className="w-full justify-start text-xs"
+                      onClick={() => setSelectedModel(model)}
+                    >
+                      {model}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
+      {/* Messages area */}
+      <div className="flex-1 flex flex-col min-h-0">
         {messages.length ? messageList : header}
       </div>
-      <form
-        onSubmit={handleSubmit}
-        className="border-input bg-background focus-within:ring-ring/10 relative mx-6 mb-6 flex items-center rounded-[16px] border px-3 py-1.5 pr-8 text-sm focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-0"
-      >
-        <AutoResizeTextarea
-          onKeyDown={handleKeyDown}
-          onChange={(v) => setInput(v)}
-          value={input}
-          placeholder="Enter a message"
-          className="placeholder:text-muted-foreground flex-1 bg-transparent focus:outline-none"
-        />
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="absolute bottom-1 right-1 size-6 rounded-full"
-            >
-              <ArrowUpIcon size={16} />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent sideOffset={12}>Submit</TooltipContent>
-        </Tooltip>
-      </form>
+
+      {/* Input area */}
+      <div className="border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex-shrink-0">
+        <div className="max-w-4xl mx-auto p-4">
+          <form onSubmit={handleSubmit} className="relative">
+            <div className="relative flex items-end gap-3 bg-gray-50 dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500">
+              <AutoResizeTextarea
+                onKeyDown={handleKeyDown}
+                onChange={(v) => setInput(v)}
+                value={input}
+                placeholder="Ask about PTSD research, treatments, or mental health..."
+                className="flex-1 bg-transparent border-0 resize-none px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-0 min-h-[52px] max-h-32"
+                disabled={isLoading}
+              />
+              <div className="p-2">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="submit"
+                      size="sm"
+                      disabled={!input.trim() || isLoading}
+                      className="rounded-xl h-8 w-8 p-0 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-700"
+                    >
+                      <ArrowUpIcon className="w-4 h-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent sideOffset={12}>Send message</TooltipContent>
+                </Tooltip>
+              </div>
+            </div>
+            <div className="flex items-center justify-end mt-2 text-xs text-muted-foreground">
+              <div>
+                Press Enter to send, Shift+Enter for new line
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </main>
   );
 }

@@ -24,26 +24,26 @@ const data = {
       title: "Chat",
       url: "chat",
       icon: Bot,
-      isActive: false,
+      isActive: true,
       items: [
         {
-          title: "New Chat",
+          title: "AI Assistant",
           url: "chat",
         },
       ],
     },
     {
-      title: "Workspace",
-      url: "",
+      title: "Dashboard",
+      url: "workspace",
       icon: SquareTerminal,
-      isActive: true,
+      isActive: false,
       items: [
         {
-          title: "Workspace",
+          title: "Knowledge Base",
           url: "workspace",
         },
         {
-          title: "Settings",
+          title: "RAG Settings",
           url: "workspace/settings",
         },
       ],

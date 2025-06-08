@@ -10,17 +10,24 @@ export default function Home() {
           PTSD AI Assistant
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-          A powerful AI workspace for mental health support and research using
-          both DeepInfra and Ollama providers.
+          Your specialized AI companion for PTSD research and mental health support.
+          Chat with our RAG-enhanced assistant or manage your knowledge base.
         </p>
         <div className="space-x-4">
-          <Link href="/workspace">
+          <Link href="/chat">
             <Button size="lg">
-              Get Started
+              Start Chatting
             </Button>
           </Link>
-          <Link href="/documentation">
+          <Link href="/workspace">
             <Button variant="outline" size="lg">
+              Dashboard
+            </Button>
+          </Link>
+        </div>
+        <div className="pt-4">
+          <Link href="/documentation">
+            <Button variant="ghost" size="sm">
               Documentation
             </Button>
           </Link>
