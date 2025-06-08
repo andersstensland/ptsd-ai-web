@@ -120,3 +120,181 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Mobile touch improvements */
+@layer components {
+  /* Improved touch targets for mobile */
+  .mobile-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better mobile dropdown menus */
+  @media (max-width: 768px) {
+    [data-radix-dropdown-menu-content] {
+      width: 90vw;
+      max-width: 24rem;
+    }
+    
+    [data-radix-dropdown-menu-item] {
+      min-height: 44px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+  }
+  
+  /* Enhanced mobile sidebar menu styling */
+  @media (max-width: 768px) {
+    [data-sidebar="menu-button"] {
+      min-height: 44px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    
+    [data-sidebar="menu-sub-button"] {
+      min-height: 40px;
+      padding: 0.5rem 1.5rem;
+      font-size: 0.875rem;
+      line-height: 1.25;
+    }
+  }
+  
+  /* Mobile-specific animations */
+  @media (max-width: 768px) {
+    [data-state="open"][data-radix-dropdown-menu-content] {
+      animation: slideInFromTop 200ms ease-out;
+    }
+    
+    [data-state="closed"][data-radix-dropdown-menu-content] {
+      animation: slideOutToTop 150ms ease-in;
+    }
+  }
+  
+  /* Better mobile breadcrumb styling */
+  @media (max-width: 768px) {
+    nav[aria-label="Breadcrumb"] ol {
+      font-size: 0.875rem;
+      line-height: 1.25;
+      gap: 0.25rem;
+    }
+    
+    nav[aria-label="Breadcrumb"] li {
+      max-width: 120px;
+    }
+    
+    nav[aria-label="Breadcrumb"] a,
+    nav[aria-label="Breadcrumb"] span {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+  
+  /* Enhanced mobile card layout */
+  @media (max-width: 768px) {
+    .grid-cols-1,
+    .sm\:grid-cols-2,
+    .md\:grid-cols-3 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+  }
+  
+  /* Mobile-friendly button layouts */
+  @media (max-width: 768px) {
+    .space-x-4 {
+      margin-left: 0;
+      margin-right: 0;
+      gap: 0.5rem;
+      flex-direction: column;
+    }
+    
+    .space-x-4 > * {
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
+
+/* Mobile animations */
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOutToTop {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutToLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+/* Enhanced mobile sidebar animations */
+@media (max-width: 768px) {
+  [data-radix-sheet-content] {
+    animation-duration: 300ms;
+    animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  
+  [data-radix-sheet-content][data-state="open"] {
+    animation-name: slideInFromLeft;
+  }
+  
+  [data-radix-sheet-content][data-state="closed"] {
+    animation-name: slideOutToLeft;
+  }
+}
+
+/* Smooth focus transitions for accessibility */
+@media (prefers-reduced-motion: no-preference) {
+  [data-sidebar="menu-button"]:focus-visible,
+  [data-sidebar="menu-sub-button"]:focus-visible,
+  .mobile-touch-target:focus-visible {
+    transition: all 0.2s ease-in-out;
+    transform: scale(1.02);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  [data-sidebar="menu-button"],
+  [data-sidebar="menu-sub-button"],
+  .mobile-touch-target {
+    border: 1px solid;
+  }
+}

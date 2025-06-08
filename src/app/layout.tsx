@@ -1,5 +1,4 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import { GlobalUploadNotification } from "@/components/global-upload-notification";
 import {
   SidebarInset,
   SidebarProvider
@@ -38,19 +37,12 @@ export default function RootLayout({
       >
         <NotificationProvider>
           <UploadProvider>
-            <SidebarProvider>
+            <SidebarProvider defaultOpen={false}>
               <AppSidebar />
               <SidebarInset>
                 {children}
               </SidebarInset>
             </SidebarProvider>
-            <GlobalUploadNotification />
-            <Toaster 
-              position="top-right"
-              expand={false}
-              richColors
-              closeButton
-            />
           </UploadProvider>
         </NotificationProvider>
       </body>

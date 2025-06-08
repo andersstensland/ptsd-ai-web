@@ -8,7 +8,6 @@ import {
 import * as React from "react"
 
 import { NavMain } from "@/components/nav-main"
-import { NotificationIcon } from "@/components/notification-icon"
 import {
   Sidebar,
   SidebarContent,
@@ -43,7 +42,7 @@ const data = {
           url: "workspace",
         },
         {
-          title: "RAG Settings",
+          title: "Settings",
           url: "workspace/settings",
         },
       ],
@@ -78,18 +77,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="flex items-center justify-between w-full">
+        <div className="flex items-center justify-center w-full p-2">
           <Image
-            src="logo/symbolet.svg"
-            alt="Symbolet"
-            className="hidden h-32 w-32 lg:block"
-            width={300}
-            height={300}
+            src="/logo/symbolet.svg"
+            alt="PTSD AI Assistant"
+            className="h-12 w-12 md:h-20 md:w-20 lg:h-32 lg:w-32"
+            width={128}
+            height={128}
+            priority
           />
-        </div>
-        {/* Mobile notification icon - visible when sidebar is collapsed */}
-        <div className="flex justify-center pt-2">
-          <NotificationIcon />
         </div>
       </SidebarHeader>
       <SidebarContent>

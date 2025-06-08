@@ -20,6 +20,7 @@ import { MobileHeader } from "@/components/mobile-header";
 import { DesktopHeader } from "@/components/desktop-header";
 
 const formSchema = z.object({
+  // RAG settings
   retrievalCount: z.number().min(1).max(20),
   similarityThreshold: z.number().min(0).max(1),
   chunkSize: z.number().min(100).max(2000),
@@ -42,22 +43,23 @@ export default function SettingsPage() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    // In a real app, this would save to localStorage, a database, or an API
     console.log(values);
-    toast.success("Settings saved", {
-      description: "Your configuration has been updated successfully.",
+    toast.success("RAG settings saved", {
+      description: "Your RAG configuration has been updated successfully.",
     });
   }
 
   return (
     <>
-      <MobileHeader title="Settings" />
-      <DesktopHeader title="Settings" />
+      <MobileHeader title="RAG Settings" />
+      <DesktopHeader title="RAG Settings" />
       <div className="flex flex-col min-h-screen p-4 md:p-6 max-w-4xl mx-auto w-full">
         
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <Settings2 className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold">Settings</h1>
+            <h1 className="text-2xl font-bold">RAG Settings</h1>
           </div>
           <p className="text-muted-foreground">
             Configure how the system retrieves and processes documents for enhanced AI responses.

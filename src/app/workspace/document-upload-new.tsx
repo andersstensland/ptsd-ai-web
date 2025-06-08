@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FileText, Upload, X, Check, AlertCircle } from "lucide-react";
+import { notificationUtils } from "@/lib/notification-utils";
 import { toast } from "sonner";
 
 type FileStatus = "idle" | "uploading" | "processing" | "complete" | "error";
@@ -87,7 +88,7 @@ export function DocumentUpload() {
         )
       );
 
-      toast.error(`Processing failed: ${errorMessage}`);
+      notificationUtils.general.error('Processing failed', errorMessage);
     }
   };
 
@@ -100,14 +101,14 @@ export function DocumentUpload() {
     ];
 
     if (!supportedTypes.includes(file.type)) {
-      toast.error(`Unsupported file type: ${file.type}. Please upload PDF, DOCX, or TXT files.`);
+      notificationUtils.general.error('Unsupported file type', `${file.type}. Please upload PDF, DOCX, or TXT files.`);
       return;
     }
 
     // Validate file size (max 10MB)
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
-      toast.error(`File too large: ${file.name}. Maximum size is 10MB.`);
+      notificationUtils.general.error('File too large', `${file.name}. Maximum size is 10MB.`);
       return;
     }
 

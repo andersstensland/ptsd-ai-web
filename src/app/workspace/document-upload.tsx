@@ -40,20 +40,49 @@ export function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
         const formData = new FormData();
         formData.append('file', file);
 
-        // Simulate progress updates
-        const progressInterval = setInterval(() => {
-          updateUpload(uploadId, { 
-            progress: Math.min(90, Math.random() * 80 + 10) 
-          });
-        }, 500);
-
-        const response = await fetch('/api/documents/upload', {
-          method: 'POST',
-          body: formData,
+        // Use XMLHttpRequest for real progress tracking
+        const xhr = new XMLHttpRequest();
+        
+        // Track upload progress
+        xhr.upload.addEventListener('progress', (e) => {
+          if (e.lengthComputable) {
+            const percentComplete = Math.round((e.loaded / e.total) * 100);
+            updateUpload(uploadId, { 
+              progress: Math.min(percentComplete, 95) // Cap at 95% to show processing
+            });
+          }
         });
 
-        clearInterval(progressInterval);
-        const result = await response.json();
+        // Handle upload completion
+        const uploadPromise = new Promise<Response>((resolve, reject) => {
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              resolve(new Response(xhr.responseText, {
+                status: xhr.status,
+                statusText: xhr.statusText,
+                headers: new Headers()
+              }));
+            } else {
+              reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
+            }
+          };
+          
+          xhr.onerror = () => reject(new Error('Network error'));
+          xhr.onabort = () => reject(new Error('Upload aborted'));
+        });
+
+        // Start the upload
+        xhr.open('POST', '/api/documents/upload');
+        xhr.send(formData);
+
+        // Wait for completion
+        const response = await uploadPromise;
+        const result = JSON.parse(xhr.responseText || '{}');
+
+        // Update to show processing
+        updateUpload(uploadId, { 
+          progress: 98
+        });
 
         if (response.ok) {
           updateUpload(uploadId, { 
@@ -70,7 +99,7 @@ export function DocumentUpload({ onUploadComplete }: DocumentUploadProps) {
         console.error('Upload error:', error);
         updateUpload(uploadId, { 
           status: 'error', 
-          error: 'Network error' 
+          error: error instanceof Error ? error.message : 'Network error'
         });
       }
     }

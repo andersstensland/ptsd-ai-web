@@ -44,8 +44,8 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     const stored = localStorage.getItem('notifications')
     if (stored) {
       try {
-        const parsed = JSON.parse(stored)
-        setEvents(parsed.map((event: any) => ({
+        const parsed = JSON.parse(stored) as NotificationEvent[]
+        setEvents(parsed.map((event) => ({
           ...event,
           timestamp: new Date(event.timestamp)
         })))
@@ -70,14 +70,16 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
     setEvents(prev => [newEvent, ...prev])
 
-    // Also show as toast
-    toast[notification.type](notification.title, {
-      description: notification.message,
-      action: notification.action ? {
-        label: notification.action.label,
-        onClick: notification.action.onClick
-      } : undefined
-    })
+    // Show toast with better UX - no duplication for upload events
+    if (!notification.title.includes('Upload')) {
+      toast[notification.type](notification.title, {
+        description: notification.message,
+        action: notification.action ? {
+          label: notification.action.label,
+          onClick: notification.action.onClick
+        } : undefined
+      })
+    }
   }, [])
 
   const markAsRead = useCallback((id: string) => {

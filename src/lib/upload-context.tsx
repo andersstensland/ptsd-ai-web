@@ -1,8 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { toast } from "sonner";
-import { useNotifications } from "./notification-context";
+import { notificationUtils } from "./notification-utils";
 
 export interface UploadStatus {
   id: string;
@@ -26,7 +25,6 @@ const UploadContext = createContext<UploadContextType | undefined>(undefined);
 
 export function UploadProvider({ children }: { children: React.ReactNode }) {
   const [uploads, setUploads] = useState<UploadStatus[]>([]);
-  const { addNotification } = useNotifications();
 
   // Load uploads from localStorage on mount
   useEffect(() => {
@@ -50,44 +48,18 @@ export function UploadProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('uploads', JSON.stringify(uploads));
   }, [uploads]);
 
-  // Show persistent notifications for active uploads
+  // Enhanced upload status tracking with simplified notifications
   useEffect(() => {
     uploads.forEach(upload => {
       if (upload.status === 'complete') {
-        toast.success(`${upload.file.name} uploaded successfully`, {
-          id: `upload-${upload.id}`,
-          duration: 5000,
-        });
-        
-        // Add to notification system
-        addNotification({
-          type: 'success',
-          title: 'Upload Completed',
-          message: `${upload.file.name} has been successfully uploaded and processed.`,
-          action: {
-            label: 'View Documents',
-            onClick: () => window.location.href = '/workspace/knowledge-base'
-          }
-        });
+        notificationUtils.upload.success(upload.file.name);
       } else if (upload.status === 'error') {
-        toast.error(`Failed to upload ${upload.file.name}: ${upload.error}`, {
-          id: `upload-${upload.id}`,
-          duration: 10000,
-        });
-        
-        // Add to notification system
-        addNotification({
-          type: 'error',
-          title: 'Upload Failed',
-          message: `${upload.file.name}: ${upload.error || 'Unknown error occurred'}`,
-          action: {
-            label: 'Try Again',
-            onClick: () => window.location.href = '/workspace/knowledge-base?tab=upload'
-          }
-        });
+        notificationUtils.upload.error(upload.file.name, upload.error || 'Unknown error occurred');
+      } else if (upload.status === 'uploading') {
+        notificationUtils.upload.progress(upload.file.name, upload.progress);
       }
     });
-  }, [uploads, addNotification]);
+  }, [uploads]);
 
   const addUpload = (file: File): string => {
     const id = Math.random().toString(36).substring(7);
@@ -101,17 +73,8 @@ export function UploadProvider({ children }: { children: React.ReactNode }) {
     
     setUploads(prev => [...prev, newUpload]);
     
-    // Show uploading toast
-    toast.loading(`Uploading ${file.name}...`, {
-      id: `upload-${id}`,
-    });
-    
-    // Add to notification system
-    addNotification({
-      type: 'info',
-      title: 'Upload Started',
-      message: `${file.name} upload has begun. You can continue using the app while it processes.`
-    });
+    // Start upload notification
+    notificationUtils.upload.started(file.name);
     
     return id;
   };
@@ -123,14 +86,17 @@ export function UploadProvider({ children }: { children: React.ReactNode }) {
   };
 
   const removeUpload = (id: string) => {
+    const upload = uploads.find(u => u.id === id);
     setUploads(prev => prev.filter(upload => upload.id !== id));
-    toast.dismiss(`upload-${id}`);
+    if (upload) {
+      notificationUtils.upload.dismiss(upload.file.name);
+    }
   };
 
   const clearCompletedUploads = () => {
     uploads.forEach(upload => {
       if (upload.status === 'complete' || upload.status === 'error') {
-        toast.dismiss(`upload-${upload.id}`);
+        notificationUtils.upload.dismiss(upload.file.name);
       }
     });
     setUploads(prev => prev.filter(upload => upload.status === 'uploading'));

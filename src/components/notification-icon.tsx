@@ -1,6 +1,6 @@
 "use client"
 
-import { Bell, Check, X, Trash2, CheckCheck } from "lucide-react"
+import { Bell, X, Trash2, CheckCheck } from "lucide-react"
 import { useState } from "react"
 import { useNotifications } from "@/lib/notification-context"
 import { Button } from "@/components/ui/button"
@@ -8,9 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -34,19 +32,6 @@ export function NotificationIcon() {
         return '⚠️'
       default:
         return 'ℹ️'
-    }
-  }
-
-  const getEventColor = (type: string) => {
-    switch (type) {
-      case 'success':
-        return 'text-green-600'
-      case 'error':
-        return 'text-red-600'
-      case 'warning':
-        return 'text-yellow-600'
-      default:
-        return 'text-blue-600'
     }
   }
 
