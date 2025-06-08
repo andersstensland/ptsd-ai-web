@@ -85,7 +85,7 @@ export function KnowledgeBase() {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          Knowledge Base
+          Content
           <Button
             variant="outline"
             size="sm"
@@ -96,7 +96,7 @@ export function KnowledgeBase() {
             Refresh
           </Button>
         </CardTitle>
-        <CardDescription>Manage your knowledge sources for RAG</CardDescription>
+        <CardDescription>Manage your content sources for RAG</CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>

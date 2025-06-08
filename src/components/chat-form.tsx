@@ -13,7 +13,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { DEEPINFRA_MODELS, OLLAMA_MODELS, type AIModel, type Provider } from "@/lib/ai-config";
+import { DEEPINFRA_MODELS, type AIModel, type Provider } from "@/lib/ai-config";
 import { cn } from "@/lib/utils";
 import { useChat } from "ai/react";
 import { ArrowUpIcon, Sparkles } from "lucide-react";
