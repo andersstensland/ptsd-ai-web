@@ -1,1 +1,0 @@
-This is a test document for the PTSD AI web application. It contains simple text that should be easily processed and uploaded to the knowledge base. The document upload system should extract this text, chunk it appropriately, and store it in the vector database for RAG functionality.
