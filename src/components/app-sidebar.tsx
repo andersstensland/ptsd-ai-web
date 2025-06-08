@@ -77,14 +77,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="flex items-center justify-center w-full p-2">
+        <div className="hidden sm:flex items-center justify-center w-full p-2">
           <Image
-            src="/logo/symbolet.svg"
+            src="logo/horisontal/Kristiania_logo_22_rod.svg"
             alt="PTSD AI Assistant"
-            className="h-12 w-12 md:h-20 md:w-20 lg:h-32 lg:w-32"
-            width={128}
-            height={128}
+            className="h-10 w-24 sm:h-12 sm:w-32 md:h-16 md:w-40 lg:h-20 lg:w-48"
+            width={192}
+            height={80}
             priority
+            style={{ height: "auto", width: "100%", maxWidth: "12rem" }}
           />
         </div>
       </SidebarHeader>

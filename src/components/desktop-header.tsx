@@ -1,10 +1,9 @@
 "use client"
 
-import * as React from "react"
-import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
 import { NotificationIcon } from "@/components/notification-icon"
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
-import Image from "next/image"
+import * as React from "react"
 
 interface DesktopHeaderProps {
   title?: string
@@ -33,14 +32,6 @@ export function DesktopHeader({ title, className, children }: DesktopHeaderProps
       />
       
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        <Image
-          src="/logo/symbolet.svg"
-          alt="PTSD AI Assistant Logo"
-          className="h-8 w-8 shrink-0"
-          width={32}
-          height={32}
-          priority
-        />
         {title && (
           <h1 className="text-lg font-semibold truncate text-foreground">{title}</h1>
         )}

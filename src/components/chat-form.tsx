@@ -16,14 +16,14 @@ import {
 import { DEEPINFRA_MODELS, OLLAMA_MODELS, type AIModel, type Provider } from "@/lib/ai-config";
 import { cn } from "@/lib/utils";
 import { useChat } from "ai/react";
-import { ArrowUpIcon, Settings, Sparkles } from "lucide-react";
+import { ArrowUpIcon, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export function ChatForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-  const [provider, setProvider] = useState<Provider>("deepinfra");
+  const [provider, ] = useState<Provider>("deepinfra");
   const [selectedModel, setSelectedModel] = useState<AIModel>("meta-llama/Meta-Llama-3.1-8B-Instruct");
   const [temperature] = useState(0.7);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -55,15 +55,6 @@ export function ChatForm({
     }
   };
 
-  const handleProviderChange = (newProvider: Provider) => {
-    setProvider(newProvider);
-    if (newProvider === "ollama") {
-      setSelectedModel(OLLAMA_MODELS[0]);
-    } else {
-      setSelectedModel(DEEPINFRA_MODELS[0]);
-    }
-  };
-
   // Simple auto-scroll to bottom for new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -72,7 +63,7 @@ export function ChatForm({
   const header = (
     <div className="flex flex-col items-center justify-center h-full max-w-2xl mx-auto px-6">
       <div className="text-center space-y-6">
-        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-gray-500 to-gray-600 rounded-2xl flex items-center justify-center mb-4">
+        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-red-800 to-red-600 rounded-2xl flex items-center justify-center mb-4">
           <Sparkles className="w-8 h-8 text-white" />
         </div>
         <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-gray-100 dark:to-gray-300">
@@ -111,7 +102,7 @@ export function ChatForm({
               )}
             >
               {message.role === "assistant" && (
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 mt-1">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-800 to-red-700 flex items-center justify-center flex-shrink-0 mt-1">
                   <Sparkles className="w-4 h-4 text-white" />
                 </div>
               )}
@@ -134,7 +125,7 @@ export function ChatForm({
           ))}
           {isLoading && (
             <div className="flex gap-4 justify-start">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 mt-1">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-red-800 to-red-600 flex items-center justify-center flex-shrink-0 mt-1">
                 <Sparkles className="w-4 h-4 text-white" />
               </div>
               <div className="max-w-[80%] rounded-2xl px-4 py-3 bg-gray-100 dark:bg-gray-800">
@@ -172,15 +163,13 @@ export function ChatForm({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="gap-2">
-                <Settings className="w-4 h-4" />
-                <span className="hidden sm:inline">Settings</span>
+                <span className="hidden sm:inline">Models</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
               <div className="px-2 py-1.5">
-                <div className="text-sm font-medium mb-1">Model</div>
                 <div className="space-y-1">
-                  {(provider === "ollama" ? OLLAMA_MODELS : DEEPINFRA_MODELS).map((model) => (
+                  {(DEEPINFRA_MODELS).map((model) => (
                     <Button
                       key={model}
                       variant={selectedModel === model ? "default" : "ghost"}

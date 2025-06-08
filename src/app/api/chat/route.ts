@@ -8,12 +8,6 @@ const deepinfra = createOpenAI({
   baseURL: 'https://api.deepinfra.com/v1/openai',
 });
 
-// Ollama provider configuration
-const ollama = createOpenAI({
-  baseURL: 'http://localhost:11434/v1',
-  apiKey: 'ollama', // Ollama doesn't require an API key
-});
-
 export async function POST(req: Request) {
   try {
     const { 
@@ -25,17 +19,8 @@ export async function POST(req: Request) {
       topP = 0.9
     } = await req.json();
 
-    let selectedProvider;
-    let selectedModel;
-
-    // Choose provider and model based on request
-    if (provider === 'ollama') {
-      selectedProvider = ollama;
-      selectedModel = model || 'llama3.2'; // Default Ollama model
-    } else {
-      selectedProvider = deepinfra;
-      selectedModel = model || 'meta-llama/Meta-Llama-3.1-8B-Instruct'; // Default DeepInfra model
-    }
+    const selectedProvider = deepinfra;
+    const selectedModel = model || 'meta-llama/Meta-Llama-3.1-8B-Instruct'; // Default DeepInfra model
 
     let augmentedMessages = messages;
 
@@ -56,11 +41,11 @@ export async function POST(req: Request) {
             // Create a system message with the context
             const contextMessage = {
               role: 'system' as const,
-              content: `You are an AI assistant specialized in PTSD and mental health support. Use the following context from the knowledge base to provide more informed and accurate responses. If the context is relevant to the user's question, incorporate it into your answer. If the context is not relevant, you may ignore it and provide a general response.
+              content: `You are an AI Research assistant specialized in PTSD and mental health. Use the following context from the knowledge base to provide more informed and accurate responses. If the context is relevant to the user's question, incorporate it into your answer. If the context is not relevant, you may ignore it and provide a general response.
 CONTEXT FROM KNOWLEDGE BASE:
 ${context}
 
-Please provide helpful, empathetic, and evidence-based responses while being clear about the limitations of AI assistance for mental health matters.`
+Please provide helpful, empathetic, and evidence-based responses while being clear about the limitations of AI assistance for mental health matters. Always provide citations for any claims made.`,
             };
 
             // Insert the context message at the beginning, or replace existing system message
