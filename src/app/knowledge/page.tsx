@@ -1,5 +1,7 @@
 "use client";
 
+import { DesktopHeader } from "@/components/desktop-header";
+import { MobileHeader } from "@/components/mobile-header";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,30 +9,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Database,
   MoreHorizontal,
-  Settings,
+  Settings
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import { KnowledgeBase } from "./knowledge-base";
-import { MobileHeader } from "@/components/mobile-header";
-import { DesktopHeader } from "@/components/desktop-header";
 
 export default function WorkspacePage() {
-  const [activeTab, setActiveTab] = useState("knowledge");
-
   return (
     <div className="flex flex-col min-h-screen">
-      <MobileHeader title="Knowledge Dashboard" />
-      <DesktopHeader title="Knowledge Dashboard" />
+      <MobileHeader title="Knowledge" />
+      <DesktopHeader title="Knowledge" />
       <div className="flex flex-col gap-6 p-4 md:p-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold">Knowledge Dashboard</h1>
-            <p className="text-muted-foreground">Manage your RAG models and knowledge base</p>
+            <h1 className="text-2xl font-bold">Knowledge</h1>
+            <p className="text-muted-foreground">Manage your RAG models and knowledge</p>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
             <Link href="workspace/settings" className="flex-1 sm:flex-none">
@@ -61,18 +56,8 @@ export default function WorkspacePage() {
           </div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1">
-          <TabsList>
-            <TabsTrigger value="knowledge" className="flex items-center gap-1">
-              <Database className="h-4 w-4" />
-              Knowledge Base
-            </TabsTrigger>
-          </TabsList>
+         <KnowledgeBase />
 
-          <TabsContent value="knowledge" className="pt-6">
-            <KnowledgeBase />
-          </TabsContent>
-        </Tabs>
       </div>
     </div>
   );

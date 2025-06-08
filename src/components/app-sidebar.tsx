@@ -33,17 +33,17 @@ const data = {
     },
     {
       title: "Dashboard",
-      url: "workspace",
+      url: "",
       icon: SquareTerminal,
       isActive: false,
       items: [
         {
-          title: "Knowledge Base",
-          url: "workspace",
+          title: "Knowledge",
+          url: "knowledge",
         },
         {
           title: "Settings",
-          url: "workspace/settings",
+          url: "settings",
         },
       ],
     },
@@ -58,11 +58,11 @@ const data = {
         },
         {
           title: "Introduction",
-          url: "documentation/introduction#",
+          url: "/introduction#",
         },
         {
           title: "Get Started",
-          url: "documentation/get-started",
+          url: "/get-started",
         },
         {
           title: "Changelog",

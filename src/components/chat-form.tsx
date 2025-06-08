@@ -1,24 +1,23 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { useChat } from "ai/react";
-import { ArrowUpIcon, Settings, Sparkles } from "lucide-react";
+import { AutoResizeTextarea } from "@/components/autoresize-textarea";
+import { MessageContent } from "@/components/message-content";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { AutoResizeTextarea } from "@/components/autoresize-textarea";
-import { MessageContent } from "@/components/message-content";
 import { DEEPINFRA_MODELS, OLLAMA_MODELS, type AIModel, type Provider } from "@/lib/ai-config";
-import { useState, useEffect, useRef } from "react";
+import { cn } from "@/lib/utils";
+import { useChat } from "ai/react";
+import { ArrowUpIcon, Settings, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 export function ChatForm({
   className,
@@ -73,7 +72,7 @@ export function ChatForm({
   const header = (
     <div className="flex flex-col items-center justify-center h-full max-w-2xl mx-auto px-6">
       <div className="text-center space-y-6">
-        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4">
+        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-gray-500 to-gray-600 rounded-2xl flex items-center justify-center mb-4">
           <Sparkles className="w-8 h-8 text-white" />
         </div>
         <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-gray-100 dark:to-gray-300">
@@ -165,9 +164,7 @@ export function ChatForm({
       <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10 flex-shrink-0">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
-            <h2 className="text-lg font-semibold">PTSD AI Assistant</h2>
             <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground">
-              <span>•</span>
               <span>Model: {selectedModel}</span>
             </div>
           </div>
@@ -180,30 +177,6 @@ export function ChatForm({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <div className="px-2 py-1.5">
-                <div className="text-sm font-medium">Provider</div>
-                <div className="mt-1 space-y-1">
-                  <Button
-                    variant={provider === "deepinfra" ? "default" : "ghost"}
-                    size="sm"
-                    className="w-full justify-start"
-                    onClick={() => handleProviderChange("deepinfra")}
-                  >
-                    DeepInfra
-                  </Button>
-                  <Button
-                    variant={provider === "ollama" ? "default" : "ghost"}
-                    size="sm"
-                    className="w-full justify-start"
-                    onClick={() => handleProviderChange("ollama")}
-                  >
-                    Ollama
-                  </Button>
-                </div>
-              </div>
-              
-              <DropdownMenuSeparator />
-              
               <div className="px-2 py-1.5">
                 <div className="text-sm font-medium mb-1">Model</div>
                 <div className="space-y-1">
