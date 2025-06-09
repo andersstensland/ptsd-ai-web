@@ -2,6 +2,7 @@ import { generateText } from 'ai';
 import { deepinfra } from '@/lib/ai-config';
 import { vectorService } from '@/lib/vector-service';
 import type { Message } from 'ai';
+import { generateSequentialPrompts, extractPromptsForExecution, type SequentialPrompts } from './prompt-generation';
 
 export interface SequentialGenerationOptions {
   model: string;
@@ -290,6 +291,102 @@ Key improvements to make:
     
     return improvements.length > 0 ? improvements.join(", ") : "Refined language and clarity";
   }
+
+  /**
+   * Generate a response using dynamically generated prompts
+   */
+  async generateWithPrompts(
+    userMessage: string,
+    options: PromptBasedGenerationOptions,
+    conversationHistory: Array<Omit<Message, 'id'>> = []
+  ): Promise<PromptBasedGenerationResult> {
+    const startTime = Date.now();
+    let ragContext: string | undefined;
+
+    // Step 1: Get RAG context if enabled
+    if (options.useRag) {
+      try {
+        const searchResults = await vectorService.searchDocuments(userMessage, 5);
+        if (searchResults.length > 0) {
+          ragContext = searchResults
+            .map(result => `Source: ${result.title}\nContent: ${result.content}`)
+            .join('\n\n---\n\n');
+        }
+      } catch (error) {
+        console.error('RAG search error:', error);
+      }
+    }
+
+    // Step 2: Generate sequential prompts
+    const generatedPrompts = await generateSequentialPrompts(userMessage, {
+      model: options.promptGenerationModel || options.model,
+      temperature: 0.3,
+      numberOfPrompts: options.rounds
+    });
+
+    const prompts = extractPromptsForExecution(generatedPrompts);
+    const rounds: GenerationRound[] = [];
+    let currentResponse = '';
+
+    // Step 3: Execute each generated prompt
+    for (let i = 0; i < prompts.length; i++) {
+      const roundNumber = i + 1;
+      const prompt = prompts[i];
+      
+      // Create contextual prompt for this round
+      let contextualPrompt = `You are an AI Research assistant specialized in PTSD and mental health.
+
+RESEARCH STRATEGY: ${generatedPrompts.researchStrategy}
+
+CURRENT STEP (${roundNumber}/${prompts.length}): ${generatedPrompts.sequentialPrompts[i].purpose}
+
+SPECIFIC INSTRUCTION: ${prompt}
+
+ORIGINAL USER QUERY: ${userMessage}`;
+
+      if (i > 0) {
+        contextualPrompt += `\n\nPREVIOUS RESEARCH FINDINGS:\n${currentResponse}\n\nBuild upon these findings while focusing on: ${generatedPrompts.sequentialPrompts[i].purpose}`;
+      }
+
+      if (ragContext) {
+        contextualPrompt += `\n\nCONTEXT FROM KNOWLEDGE BASE:\n${ragContext}`;
+      }
+
+      const round = await this.generateRound({
+        round: roundNumber,
+        userMessage,
+        conversationHistory,
+        ragContext,
+        options,
+        prompt: contextualPrompt,
+        previousResponse: currentResponse
+      });
+
+      rounds.push(round);
+      currentResponse = round.response;
+    }
+
+    const totalTime = Date.now() - startTime;
+
+    return {
+      finalResponse: currentResponse,
+      rounds,
+      totalTime,
+      ragContext,
+      generatedPrompts,
+      promptStrategy: generatedPrompts.researchStrategy
+    };
+  }
 }
 
 export const sequentialGenerationService = SequentialGenerationService.getInstance();
+
+export interface PromptBasedGenerationOptions extends SequentialGenerationOptions {
+  usePromptGeneration?: boolean;
+  promptGenerationModel?: string;
+}
+
+export interface PromptBasedGenerationResult extends SequentialGenerationResult {
+  generatedPrompts?: SequentialPrompts;
+  promptStrategy?: string;
+}

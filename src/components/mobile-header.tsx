@@ -36,7 +36,7 @@ export function MobileHeader({ title, className, children }: MobileHeaderProps) 
       
       <div className="flex items-center gap-3 flex-1 min-w-0">
         <Image
-          src="/logo/symbolet.svg"
+          src="/logo/Symbolet.svg"
           alt="PTSD AI Assistant Logo"
           className="h-8 w-8 shrink-0"
           width={32}

@@ -29,6 +29,10 @@ const data = {
           title: "AI Assistant",
           url: "chat",
         },
+        {
+          title: "Prompt Generator",
+          url: "prompts",
+        },
       ],
     },
     {
@@ -79,7 +83,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <div className="hidden sm:flex items-center justify-center w-full p-2">
           <Image
-            src="logo/horisontal/Kristiania_logo_22_rod.svg"
+            src="/logo/horisontal/Kristiania_logo_22_rod.svg"
             alt="PTSD AI Assistant"
             className="h-10 w-24 sm:h-12 sm:w-32 md:h-16 md:w-40 lg:h-20 lg:w-48"
             width={192}

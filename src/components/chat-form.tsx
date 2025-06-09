@@ -60,6 +60,7 @@ interface SequentialResult {
     model: string;
     rounds: number;
     useRag: boolean;
+    usePromptGeneration?: boolean;
     generatedAt: string;
   };
 }
@@ -88,7 +89,8 @@ export function ChatForm({
     temperature: 0.7,
     maxTokens: 1000,
     topP: 0.9,
-    useRag: true
+    useRag: true,
+    usePromptGeneration: false
   });
   const [extendedMessages, setExtendedMessages] = useState<ExtendedMessage[]>([]);
   const [isSequentialLoading, setIsSequentialLoading] = useState(false);
@@ -130,7 +132,12 @@ export function ChatForm({
     setIsSequentialLoading(true);
 
     try {
-      const response = await fetch('/api/chat/sequential', {
+      // Choose endpoint based on mode
+      const endpoint = sequentialSettings.usePromptGeneration 
+        ? '/api/chat/prompt-based' 
+        : '/api/chat/sequential';
+      
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -175,6 +182,7 @@ export function ChatForm({
             model: selectedModel,
             rounds: sequentialSettings.rounds,
             useRag: sequentialSettings.useRag,
+            usePromptGeneration: sequentialSettings.usePromptGeneration,
             generatedAt: new Date().toISOString()
           }
         }
@@ -271,8 +279,17 @@ export function ChatForm({
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Badge variant="secondary" className="gap-1">
-                        <Zap className="w-3 h-3" />
-                        Sequential ({(message as ExtendedMessage).sequentialData!.rounds.length} rounds)
+                        {(message as ExtendedMessage).sequentialData!.metadata?.usePromptGeneration ? (
+                          <>
+                            <Brain className="w-3 h-3" />
+                            Dynamic ({(message as ExtendedMessage).sequentialData!.rounds.length} rounds)
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="w-3 h-3" />
+                            Sequential ({(message as ExtendedMessage).sequentialData!.rounds.length} rounds)
+                          </>
+                        )}
                       </Badge>
                       <Badge variant="outline" className="gap-1">
                         <Clock className="w-3 h-3" />
@@ -389,14 +406,21 @@ export function ChatForm({
           
           <div className="flex items-center gap-2">
             <Button
-              variant={isSequentialMode ? "default" : "ghost"}
+              variant={isSequentialMode ? "default" : "outline"}
               size="sm"
               className="gap-2 text-xs"
               onClick={() => setIsSequentialMode(!isSequentialMode)}
             >
-              <Zap className="w-3 h-3" />
+              {sequentialSettings.usePromptGeneration ? (
+                <Brain className="w-3 h-3" />
+              ) : (
+                <Zap className="w-3 h-3" />
+              )}
               <span className="hidden sm:inline">
-                {isSequentialMode ? "Sequential ON" : "Sequential Mode"}
+                {isSequentialMode 
+                  ? (sequentialSettings.usePromptGeneration ? "Dynamic ON" : "Sequential ON")
+                  : "Sequential Mode"
+                }
               </span>
             </Button>
             
@@ -478,6 +502,26 @@ export function ChatForm({
                       />
                       <Label htmlFor="useRag">Use RAG Enhancement</Label>
                     </div>
+
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id="usePromptGeneration"
+                        checked={sequentialSettings.usePromptGeneration}
+                        onCheckedChange={(checked) =>
+                          setSequentialSettings(prev => ({ ...prev, usePromptGeneration: checked }))
+                        }
+                      />
+                      <Label htmlFor="usePromptGeneration">Dynamic Prompt Generation</Label>
+                    </div>
+                    
+                    {sequentialSettings.usePromptGeneration && (
+                      <div className="bg-blue-50 dark:bg-blue-950/20 p-3 rounded-lg border border-blue-200 dark:border-blue-800">
+                        <p className="text-xs text-blue-800 dark:text-blue-200">
+                          <strong>Dynamic Mode:</strong> AI will generate strategic prompts tailored to your query, 
+                          then execute them sequentially for more comprehensive research responses.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </SheetContent>
               </Sheet>

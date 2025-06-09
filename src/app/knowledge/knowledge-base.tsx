@@ -192,7 +192,7 @@ export function KnowledgeBase() {
           </TabsContent>
 
           <TabsContent value="upload">
-            <DocumentUpload onUploadComplete={loadDocuments} />
+            <DocumentUpload />
           </TabsContent>
         </Tabs>
       </CardContent>
