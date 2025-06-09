@@ -28,7 +28,7 @@ export default function WorkspacePage() {
             <p className="text-muted-foreground">Manage your RAG models and knowledge</p>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full">
-            <Link href="workspace/settings" className="flex-1 sm:flex-none">
+            <Link href="/settings" className="flex-1 sm:flex-none">
               <Button variant="outline" className="gap-2 w-full sm:w-auto mobile-touch-target">
                 <Settings className="h-4 w-4" />
                 <span>Settings</span>
